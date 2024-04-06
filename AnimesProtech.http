@@ -1,0 +1,6 @@
+@AnimesProtech_HostAddress = http://localhost:5067
+
+GET {{AnimesProtech_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
