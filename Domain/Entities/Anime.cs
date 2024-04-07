@@ -15,6 +15,13 @@ namespace AnimesProtech.Domain.Entities
             _animeNameSpecification = new AnimeNameSpecification();
         }
 
+        public Anime(string name, string summary = null, string director = null)
+        {
+            ChangeName(name);
+            this.summary = summary;
+            this.director = director;
+        }
+
         public void ChangeName(string newName)
         {
             if (!_animeNameSpecification.IsSatisfiedBy(newName))
