@@ -6,8 +6,8 @@ namespace AnimesProtech.Domain.Interfaces
     {
         Task<T> GetById(Guid id, CancellationToken cancellationToken);
         Task<List<T>> GetAll(CancellationToken cancellationToken);
-        Task Add(T entity);
+        Task<T> Add(T entity);
         Task Update(T entity);
-        Task Remove(Guid id);
+        Task Delete(Guid id);
     }
 }
