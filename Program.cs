@@ -1,3 +1,4 @@
+using AnimesProtech.Application.Endpoints;
 using AnimesProtech.Domain.Entities;
 using AnimesProtech.Domain.Interfaces;
 using AnimesProtech.Infrastructure.Data;
@@ -6,11 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -54,18 +50,6 @@ app.UseHttpsRedirection();
 
 app.MapGroup("/api/v1/identity/").MapIdentityApi<IdentityUser>();
 
-app.MapPost("/api/v1/animes", async (Anime anime, IAnimeRepository _animeRepository) =>
-{
-    await _animeRepository.Add(anime);
-    return Results.Created($"/api/v1/animes/{anime.id}", anime);
-})
-    .WithName("Adiciona Novo Anime")
-    .RequireAuthorization()
-    .WithOpenApi(it => new Microsoft.OpenApi.Models.OpenApiOperation(it)
-    {
-        Description = "Adiciona um novo anime",
-        OperationId = "AdicionaNovoAnime",
-        Tags = new[] { new OpenApiTag { Name = "Animes" } }
-    });
+app.RegisterAnimesEndpoints();
 
 app.Run();
