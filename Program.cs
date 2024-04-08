@@ -1,6 +1,7 @@
 using AnimesProtech.Domain.Entities;
 using AnimesProtech.Domain.Interfaces;
 using AnimesProtech.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -29,7 +30,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<AppDbContext>();
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
+app.UseStatusCodePages(async statusCodeContext =>
+{
+    await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
+    .ExecuteAsync(statusCodeContext.HttpContext);
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -40,12 +52,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapGroup("/api/v1/identity/").MapIdentityApi<IdentityUser>();
+
 app.MapPost("/api/v1/animes", async (Anime anime, IAnimeRepository _animeRepository) =>
 {
-    _animeRepository.Add(anime);
+    await _animeRepository.Add(anime);
     return Results.Created($"/api/v1/animes/{anime.id}", anime);
 })
     .WithName("Adiciona Novo Anime")
+    .RequireAuthorization()
     .WithOpenApi(it => new Microsoft.OpenApi.Models.OpenApiOperation(it)
     {
         Description = "Adiciona um novo anime",
