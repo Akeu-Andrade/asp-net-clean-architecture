@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Application\NovaPasta1\**" />
+    <Compile Remove="Application\NovaPasta2\**" />
+    <Content Remove="Application\NovaPasta1\**" />
+    <Content Remove="Application\NovaPasta2\**" />
+    <EmbeddedResource Remove="Application\NovaPasta1\**" />
+    <EmbeddedResource Remove="Application\NovaPasta2\**" />
+    <None Remove="Application\NovaPasta1\**" />
+    <None Remove="Application\NovaPasta2\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />

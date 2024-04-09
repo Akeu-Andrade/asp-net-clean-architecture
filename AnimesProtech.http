@@ -1,6 +1,37 @@
-@AnimesProtech_HostAddress = http://localhost:5067
+@AnimesProtech_HostAddress = http://localhost:7230
 
-GET {{AnimesProtech_HostAddress}}/weatherforecast/
+###
+
+POST {{AnimesProtech_HostAddress}}/api/v1/identity/register
 Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "teste2@gmail.com",
+    "password": "Aa-123456"
+}
+
+###
+
+POST {{AnimesProtech_HostAddress}}/api/v1/identity/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "teste2@gmail.com",
+    "password": "Aa-123456"
+}
+
+###
+
+POST {{AnimesProtech_HostAddress}}/api/v1/animes/
+Accept: application
+Content-Type: application/json
+
+{
+    "name": "DBZ",
+    "summary": "A vida de Goku",
+    "director": "Akira Toriyama"
+}
 
 ###

@@ -1,18 +1,14 @@
+using AnimesProtech.Application;
 using AnimesProtech.Application.Endpoints;
-using AnimesProtech.Domain.Entities;
 using AnimesProtech.Domain.Interfaces;
 using AnimesProtech.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API PROTECH", Version = "v1" });
-});
+builder.Services.AddConfigSwagger();
 
 builder.Services.AddTransient<IAnimeRepository, AnimeRepository>();
 

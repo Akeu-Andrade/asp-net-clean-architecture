@@ -6,31 +6,11 @@ namespace AnimesProtech.Domain.Entities
     {
         private readonly AnimeNameSpecification _animeNameSpecification;
 
-        public string name { get; private set; }
+        public string name { get; set; }
         public string? summary { get; set; }
         public string? director { get; set; }
 
-        public Anime()
-        {
-            _animeNameSpecification = new AnimeNameSpecification();
-        }
-
-        public Anime(string name, string summary = null, string director = null)
-        {
-            ChangeName(name);
-            this.summary = summary;
-            this.director = director;
-        }
-
-        public void ChangeName(string newName)
-        {
-            if (!_animeNameSpecification.IsSatisfiedBy(newName))
-            {
-                throw new ArgumentException("O nome não pode ser vazio ou nulo.", nameof(newName));
-            }
-
-            name = newName;
-        }
+        
 
     }
 }
