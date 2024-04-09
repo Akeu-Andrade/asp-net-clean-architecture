@@ -1,4 +1,4 @@
-using AnimesProtech.Application;
+using AnimesProtech.Application.ConfigDoument;
 using AnimesProtech.Application.Endpoints;
 using AnimesProtech.Domain.Interfaces;
 using AnimesProtech.Infrastructure.Data;

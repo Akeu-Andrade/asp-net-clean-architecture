@@ -1,4 +1,4 @@
-@AnimesProtech_HostAddress = http://localhost:7230
+@AnimesProtech_HostAddress = https://localhost:7230
 
 ###
 
@@ -25,7 +25,8 @@ Content-Type: application/json
 ###
 
 POST {{AnimesProtech_HostAddress}}/api/v1/animes/
-Accept: application
+Accept: application/json
+Authorization: Bearer CfDJ8MudfooZ9NRKnTgrxa9PMkxD0aCtVtmeuo0E6BiimBZv-k9meqBMblN2C7naz62FfOwc7UCsDCGE5JCRpYrYQ3FkSR7g2FG0T18a1paSciJMlQvbeme0o3Dcu74gOA34YCFN5Ol2XWmpq2sIjubLR4ZSuoUgyBt6jTZuiqUcZ77DrnNYcqbFgUIWSvh9BNTP5_VS6yuV6mOTKmaQPUj9NZlX7qX52KZfLqgVxhU49Xqwmp3hRIxiKPJswkiUC2mbLz5ZOFgkpdsPuLknaOCBpaP1iU0UQNRHwI2T_Bhqr1rfVhq5OQa0GwBcucpqu5snJaonxXZ_0EP7yh7Tq-t09i4FeTNavizADi-cn1rfRCdGI2A2XfE8p7gP3WjCOfU_feKLLvjJotjjqzQmr5zMNKxGYLoPzsICoc5K2-6L6lIy9Rl4CP860zBsrQ3FfOnC9iZ5duWULVz5eZdFjzFYrudY7cgUBwfxEjrAeixvNH9RLMwYlwWfgobtmtEa8QQTvUyyAtrT7pQvH2FzfF7fd8kc1EpWIS1NZXtfV0-7CDI88ct3uPUPDwcj5YUrSI4jXNgxPB9qvi5j3egVc2djB78FhmMOJTll5wJ73Hq5GwdBshJttDPzfmeZx9OOLt1jTa2HJlTDxZHfVFrSbWW-7KlP3WylLdzEspOSikz6b-CeP2snqvU5oWPeuANhYiOSTA
 Content-Type: application/json
 
 {

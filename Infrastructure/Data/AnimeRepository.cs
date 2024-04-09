@@ -25,21 +25,20 @@ namespace AnimesProtech.Infrastructure.Data
             return entity;
         }
 
-        public Task<List<Anime>> GetAll(CancellationToken cancellationToken)
+        public Task<List<Anime>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Anime> GetById(Guid id, CancellationToken cancellationToken)
+        public Task<Anime> GetById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Anime?> GetByName(string name, CancellationToken cancellationToken)
+        public async Task<Anime?> GetByName(string name)
         {
             return await _context.Animes.FirstOrDefaultAsync(it => 
-                it.name == name, 
-                cancellationToken
+                it.name == name
             );
         }
 

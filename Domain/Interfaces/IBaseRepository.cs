@@ -4,8 +4,8 @@ namespace AnimesProtech.Domain.Interfaces
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {
-        Task<T> GetById(Guid id, CancellationToken cancellationToken);
-        Task<List<T>> GetAll(CancellationToken cancellationToken);
+        Task<T> GetById(Guid id);
+        Task<List<T>> GetAll();
         Task<T> Add(T entity);
         Task Update(T entity);
         Task Delete(Guid id);

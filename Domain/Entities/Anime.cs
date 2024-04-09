@@ -10,7 +10,5 @@ namespace AnimesProtech.Domain.Entities
         public string? summary { get; set; }
         public string? director { get; set; }
 
-        
-
     }
 }
