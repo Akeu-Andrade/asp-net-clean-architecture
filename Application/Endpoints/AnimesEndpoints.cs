@@ -1,4 +1,5 @@
-﻿using AnimesProtech.Domain.Entities;
+﻿using AnimesProtech.Application.ConfigDoument;
+using AnimesProtech.Domain.Entities;
 using AnimesProtech.Domain.Interfaces;
 
 namespace AnimesProtech.Application.Endpoints

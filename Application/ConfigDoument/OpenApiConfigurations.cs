@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace AnimesProtech.Application
+namespace AnimesProtech.Application.ConfigDoument
 {
     public static class OpenApiConfigurations
     {

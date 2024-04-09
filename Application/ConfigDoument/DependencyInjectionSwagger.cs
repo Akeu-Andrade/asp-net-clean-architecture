@@ -1,13 +1,13 @@
 ﻿using Microsoft.OpenApi.Models;
 
-namespace AnimesProtech.Application
+namespace AnimesProtech.Application.ConfigDoument
 {
     public static class DependencyInjectionSwagger
     {
         public static IServiceCollection AddConfigSwagger(this IServiceCollection services)
-        { 
-            services.AddSwaggerGen(it => 
-            { 
+        {
+            services.AddSwaggerGen(it =>
+            {
                 it.SwaggerDoc("v1", new OpenApiInfo { Title = "API ANIME PROTECH", Version = "v1" });
 
                 it.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
