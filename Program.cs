@@ -1,5 +1,4 @@
 using AnimesProtech.Application.ConfigDoument;
-using AnimesProtech.Application.Endpoints;
 using AnimesProtech.Application.UseCases;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using AnimesProtech.Domain.Interfaces.UseCases;
@@ -9,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfigSwagger();
 
@@ -20,7 +20,7 @@ string mySqlConnectionStr = builder.Configuration.GetConnectionString("DefaultCo
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
-        mySqlConnectionStr, 
+        mySqlConnectionStr,
         ServerVersion.AutoDetect(mySqlConnectionStr)
     )
 );
@@ -47,8 +47,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
+app.UseAuthorization();
+
 app.MapGroup("/api/v1/identity/").MapIdentityApi<IdentityUser>();
 
-app.RegisterAnimesEndpoints();
+app.MapControllers();
 
 app.Run();
