@@ -1,4 +1,5 @@
 ﻿using AnimesProtech.Domain.Entities;
+using AnimesProtech.Domain.Interfaces.DbContext;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +8,9 @@ namespace AnimesProtech.Infrastructure.Data
     public class AnimeRepository : IAnimeRepository
     {
 
-        private readonly AppDbContext _context;
+        private readonly IAppDbContext _context;
 
-        public AnimeRepository(AppDbContext context)
+        public AnimeRepository(IAppDbContext context)
         {
             _context = context;
         }

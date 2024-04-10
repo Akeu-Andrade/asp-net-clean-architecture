@@ -1,5 +1,6 @@
 using AnimesProtech.Application.ConfigDoument;
 using AnimesProtech.Application.UseCases;
+using AnimesProtech.Domain.Interfaces.DbContext;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using AnimesProtech.Domain.Interfaces.UseCases;
 using AnimesProtech.Infrastructure.Data;
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddConfigSwagger();
 
+builder.Services.AddTransient<IAppDbContext, AppDbContext>();
 builder.Services.AddTransient<IAnimeRepository, AnimeRepository>();
 builder.Services.AddTransient<IAddAnimeUseCase, AddAnimeUseCase>();
 
