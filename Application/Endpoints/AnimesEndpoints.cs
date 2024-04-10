@@ -1,6 +1,7 @@
 ﻿using AnimesProtech.Application.ConfigDoument;
 using AnimesProtech.Domain.Entities;
-using AnimesProtech.Domain.Interfaces;
+using AnimesProtech.Domain.Interfaces.Repositorys;
+using AnimesProtech.Domain.Interfaces.UseCases;
 
 namespace AnimesProtech.Application.Endpoints
 {
@@ -10,11 +11,10 @@ namespace AnimesProtech.Application.Endpoints
         {
             var group = routes.MapGroup("/api/v1/animes").WithTags(nameof(Anime));
 
-            group.MapPost("/", async (Anime anime, IAnimeRepository _animeRepository) =>
+            group.MapPost("/", async (Anime anime, IAddAnimeUseCase addAnimeUseCase) =>
             {
-                await _animeRepository.Add(anime);
-
-                return Results.Created($"{anime.id}", anime);
+                var addedAnime = await addAnimeUseCase.Execute(anime);
+                return Results.Created($"/api/v1/animes/{addedAnime.id}", addedAnime);
             })
                 .WithName("Adiciona Novo Anime")
                 .RequireAuthorization()

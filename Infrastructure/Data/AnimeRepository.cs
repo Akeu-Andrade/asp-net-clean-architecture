@@ -1,5 +1,5 @@
 ﻿using AnimesProtech.Domain.Entities;
-using AnimesProtech.Domain.Interfaces;
+using AnimesProtech.Domain.Interfaces.Repositorys;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnimesProtech.Infrastructure.Data
@@ -18,6 +18,8 @@ namespace AnimesProtech.Infrastructure.Data
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
+
+            entity.created_at = DateTime.Now;
 
             _context.Animes.Add(entity);
             await _context.SaveChangesAsync();

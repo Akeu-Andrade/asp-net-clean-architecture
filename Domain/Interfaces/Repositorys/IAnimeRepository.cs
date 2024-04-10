@@ -1,6 +1,6 @@
 ﻿using AnimesProtech.Domain.Entities;
 
-namespace AnimesProtech.Domain.Interfaces
+namespace AnimesProtech.Domain.Interfaces.Repositorys
 {
     public interface IAnimeRepository : IBaseRepository<Anime>
     {
