@@ -59,5 +59,13 @@ namespace AnimesProtech.Application.Controllers
             return Ok(updatedAnime);
         }
 
+        [HttpDelete("{id}")]
+        [AnimeDeleteOperation]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _deleteAnimeUseCase.Execute(id);
+            return NoContent();
+        }
+
     }
 }

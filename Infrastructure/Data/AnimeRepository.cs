@@ -32,6 +32,7 @@ namespace AnimesProtech.Infrastructure.Data
         {
             var query = _context.Animes.AsQueryable();
 
+            query = query.Where(a => a.deleted_at == null);
             query = ApplyDirectorFilter(query, criteria.Director);
             query = ApplyNameFilter(query, criteria.Name);
             query = ApplySummaryFilter(query, criteria.Summary);
