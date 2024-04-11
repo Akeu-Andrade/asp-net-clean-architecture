@@ -1,14 +1,15 @@
 ﻿using AnimesProtech.Domain.Entities;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using AnimesProtech.Domain.Interfaces.UseCases;
+using AnimesProtech.Domain.Specifications;
 
 namespace AnimesProtech.Application.UseCases
 {
-    public class AddAnimeUseCase : IAddAnimeUseCase
+    public class UpdateAnimeUseCase : IUpdateAnimeUseCase
     {
         private readonly IAnimeRepository _animeRepository;
 
-        public AddAnimeUseCase(IAnimeRepository animeRepository)
+        public UpdateAnimeUseCase(IAnimeRepository animeRepository)
         {
             _animeRepository = animeRepository;
         }
@@ -20,7 +21,7 @@ namespace AnimesProtech.Application.UseCases
                 throw new ArgumentNullException(nameof(anime));
             }
 
-            return await _animeRepository.Add(anime);
+            return await _animeRepository.Update(anime);
         }
     }
 }

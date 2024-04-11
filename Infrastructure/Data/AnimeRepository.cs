@@ -3,6 +3,7 @@ using AnimesProtech.Domain.Interfaces.DbContext;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using AnimesProtech.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace AnimesProtech.Infrastructure.Data
 {
@@ -21,6 +22,7 @@ namespace AnimesProtech.Infrastructure.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
+            entity.updated_at = DateTime.UtcNow;
             _context.Animes.Add(entity);
             await _context.SaveChangesAsync();
 
@@ -42,10 +44,13 @@ namespace AnimesProtech.Infrastructure.Data
         public async Task Delete(Guid id)
         {
             var anime = await _context.Animes.FindAsync(id);
+
             if (anime == null)
                 throw new KeyNotFoundException("Anime não encontrado");
 
-            _context.Animes.Remove(anime);
+            anime.deleted_at = DateTime.UtcNow;
+
+            _context.Animes.Update(anime);
             await _context.SaveChangesAsync();
         }
 
@@ -58,11 +63,17 @@ namespace AnimesProtech.Infrastructure.Data
             anime.name = entity.name;
             anime.summary = entity.summary;
             anime.director = entity.director;
+            anime.updated_at = DateTime.UtcNow;
 
             _context.Animes.Update(anime);
             await _context.SaveChangesAsync();
 
             return anime;
+        }
+
+        public async Task<Anime> GetById(Guid id)
+        {
+            return await _context.Animes.FindAsync(id);
         }
 
         private IQueryable<Anime> ApplyDirectorFilter(IQueryable<Anime> query, string director)
