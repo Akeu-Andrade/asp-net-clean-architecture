@@ -3,7 +3,6 @@ using AnimesProtech.Domain.Interfaces.DbContext;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using AnimesProtech.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace AnimesProtech.Infrastructure.Data
 {
@@ -35,7 +34,7 @@ namespace AnimesProtech.Infrastructure.Data
 
             query = ApplyDirectorFilter(query, criteria.Director);
             query = ApplyNameFilter(query, criteria.Name);
-            query = ApplyKeywordsFilter(query, criteria.Keywords);
+            query = ApplySummaryFilter(query, criteria.Summary);
             query = ApplyPagination(query, criteria.PageIndex, criteria.PageSize);
 
             return await query.ToListAsync();
@@ -96,11 +95,11 @@ namespace AnimesProtech.Infrastructure.Data
             return query;
         }
 
-        private IQueryable<Anime> ApplyKeywordsFilter(IQueryable<Anime> query, string keywords)
+        private IQueryable<Anime> ApplySummaryFilter(IQueryable<Anime> query, string summary)
         {
-            if (!string.IsNullOrEmpty(keywords))
+            if (!string.IsNullOrEmpty(summary))
             {
-                query = query.Where(a => a.summary.Contains(keywords));
+                query = query.Where(a => a.summary.Contains(summary));
             }
 
             return query;
