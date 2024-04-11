@@ -1,23 +1,32 @@
-﻿using Xunit;
-using Moq;
+﻿using AnimesProtech.Application.Controllers;
 using AnimesProtech.Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
-using AnimesProtech.Application.Controllers;
 using AnimesProtech.Domain.Interfaces.UseCases;
+using AnimesProtech.Domain.Specifications;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Xunit;
 
-namespace AnimesProtech.Tests.Controllers;
+namespace AnimesProtech.Application.Tests.Controllers;
 public class AnimesControllerTests
 {
+    private readonly Mock<IAddAnimeUseCase> mockAddAnimeUseCase;
+    private readonly Mock<IGetAnimesUseCase> mockGetAnimesUseCase;
+
+    public AnimesControllerTests()
+    {
+        mockAddAnimeUseCase = new Mock<IAddAnimeUseCase>();
+        mockGetAnimesUseCase = new Mock<IGetAnimesUseCase>();
+    }
+
     [Fact]
     public async Task PostAnime_ReturnsCreatedAtActionResult_WithAnime()
     {
         // Arrange
-        var mockUseCase = new Mock<IAddAnimeUseCase>();
         var anime = GetTestAnime();
-        mockUseCase.Setup(useCase => useCase.Execute(It.IsAny<Anime>()))
+        mockAddAnimeUseCase.Setup(useCase => useCase.Execute(It.IsAny<Anime>()))
             .ReturnsAsync(anime);
 
-        var controller = new AnimesController(mockUseCase.Object);
+        var controller = new AnimesController(mockAddAnimeUseCase.Object, mockGetAnimesUseCase.Object);
 
         // Act
         var result = await controller.Post(anime);
@@ -28,13 +37,45 @@ public class AnimesControllerTests
         Assert.Equal(anime, returnValue);
     }
 
-    private Anime GetTestAnime()
+    [Fact]
+    public async Task GetAnimes_ReturnsOkObjectResult_WithListOfAnimes()
     {
-        return new Anime()
+        // Arrange
+        var animes = GetTestAnimes();
+        var criteria = new AnimeSearchCriteria();
+        mockGetAnimesUseCase.Setup(useCase => useCase.Execute(It.IsAny<AnimeSearchCriteria>()))
+            .ReturnsAsync(animes);
+
+        var controller = new AnimesController(mockAddAnimeUseCase.Object, mockGetAnimesUseCase.Object);
+
+        // Act
+        var result = await controller.Get(criteria);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnValue = Assert.IsType<List<Anime>>(okResult.Value);
+        Assert.Equal(animes, returnValue);
+    }
+
+    private List<Anime> GetTestAnimes()
+    {
+        return new List<Anime>()
         {
-            name = "Test Anime",
-            summary = "Test Summary",
-            director = "Test Director"
+            GetTestAnime(),
+            GetTestAnime(),
+            GetTestAnime()
         };
     }
+
+    private Anime GetTestAnime()
+    {
+        var random = new Random().Next(1, 20);
+        return new Anime()
+        {
+            name = $"Test Anime {random}",
+            summary = $"Test Summary {random}",
+            director = $"Test Director {random}"
+        };
+    }
+
 }

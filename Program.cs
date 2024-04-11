@@ -16,6 +16,7 @@ builder.Services.AddConfigSwagger();
 builder.Services.AddTransient<IAppDbContext, AppDbContext>();
 builder.Services.AddTransient<IAnimeRepository, AnimeRepository>();
 builder.Services.AddTransient<IAddAnimeUseCase, AddAnimeUseCase>();
+builder.Services.AddTransient<IGetAnimesUseCase, GetAnimesUseCase>();
 
 string mySqlConnectionStr = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new Exception("Connection string not found");
