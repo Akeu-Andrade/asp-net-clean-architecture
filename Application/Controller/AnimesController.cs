@@ -14,13 +14,19 @@ namespace AnimesProtech.Application.Controllers
     {
         private readonly IAddAnimeUseCase _addAnimeUseCase;
         private readonly IGetAnimesUseCase _getAnimesUseCase;
+        private readonly IUpdateAnimeUseCase _updateAnimeUseCase;
+        private readonly IDeleteAnimeUseCase _deleteAnimeUseCase;
 
         public AnimesController(
             IAddAnimeUseCase addAnimeUseCase,
-            IGetAnimesUseCase getAnimesUseCase
+            IGetAnimesUseCase getAnimesUseCase,            
+            IUpdateAnimeUseCase updateAnimeUseCase,
+            IDeleteAnimeUseCase deleteAnimeUseCase
         ) {
             _addAnimeUseCase = addAnimeUseCase;
             _getAnimesUseCase = getAnimesUseCase;
+            _updateAnimeUseCase = updateAnimeUseCase;
+            _deleteAnimeUseCase = deleteAnimeUseCase;
         }
 
         [HttpPost]
@@ -37,6 +43,20 @@ namespace AnimesProtech.Application.Controllers
         {
             var animes = await _getAnimesUseCase.Execute(criteria);
             return Ok(animes);
+        }
+
+        [HttpPut("{id}")]
+        [AnimePutOperation]
+        public async Task<IActionResult> Put(Guid id, Anime anime)
+        {
+            if (id != anime.id)
+            {
+                return BadRequest();
+            }
+
+            var updatedAnime = await _updateAnimeUseCase.Execute(anime);
+
+            return Ok(updatedAnime);
         }
 
     }

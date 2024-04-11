@@ -11,11 +11,15 @@ public class AnimesControllerTests
 {
     private readonly Mock<IAddAnimeUseCase> mockAddAnimeUseCase;
     private readonly Mock<IGetAnimesUseCase> mockGetAnimesUseCase;
+    private readonly Mock<IUpdateAnimeUseCase> mockUpdateAnimeUseCase;
+    private readonly Mock<IDeleteAnimeUseCase> mockDeleteAnimeUseCase;
 
     public AnimesControllerTests()
     {
         mockAddAnimeUseCase = new Mock<IAddAnimeUseCase>();
         mockGetAnimesUseCase = new Mock<IGetAnimesUseCase>();
+        mockUpdateAnimeUseCase = new Mock<IUpdateAnimeUseCase>();
+        mockDeleteAnimeUseCase = new Mock<IDeleteAnimeUseCase>();
     }
 
     [Fact]
@@ -26,7 +30,12 @@ public class AnimesControllerTests
         mockAddAnimeUseCase.Setup(useCase => useCase.Execute(It.IsAny<Anime>()))
             .ReturnsAsync(anime);
 
-        var controller = new AnimesController(mockAddAnimeUseCase.Object, mockGetAnimesUseCase.Object);
+        var controller = new AnimesController(
+            mockAddAnimeUseCase.Object, 
+            mockGetAnimesUseCase.Object,
+            mockUpdateAnimeUseCase.Object,
+            mockDeleteAnimeUseCase.Object
+        );
 
         // Act
         var result = await controller.Post(anime);
@@ -46,7 +55,12 @@ public class AnimesControllerTests
         mockGetAnimesUseCase.Setup(useCase => useCase.Execute(It.IsAny<AnimeSearchCriteria>()))
             .ReturnsAsync(animes);
 
-        var controller = new AnimesController(mockAddAnimeUseCase.Object, mockGetAnimesUseCase.Object);
+        var controller = new AnimesController(
+            mockAddAnimeUseCase.Object, 
+            mockGetAnimesUseCase.Object,
+            mockUpdateAnimeUseCase.Object,
+            mockDeleteAnimeUseCase.Object 
+        );
 
         // Act
         var result = await controller.Get(criteria);
