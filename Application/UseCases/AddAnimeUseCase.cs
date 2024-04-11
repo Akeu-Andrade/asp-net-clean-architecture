@@ -15,6 +15,7 @@ namespace AnimesProtech.Application.UseCases
 
         public async Task<Anime> Execute(Anime anime)
         {
+            anime.created_at = DateTime.Now;
             return await _animeRepository.Add(anime);
         }
     }

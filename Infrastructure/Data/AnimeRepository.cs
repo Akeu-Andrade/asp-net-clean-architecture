@@ -21,8 +21,6 @@ namespace AnimesProtech.Infrastructure.Data
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            entity.created_at = DateTime.Now;
-
             _context.Animes.Add(entity);
             await _context.SaveChangesAsync();
 
@@ -41,21 +39,30 @@ namespace AnimesProtech.Infrastructure.Data
             return await query.ToListAsync();
         }
 
-        public async Task<Anime?> GetByName(string name)
+        public async Task Delete(Guid id)
         {
-            return await _context.Animes.FirstOrDefaultAsync(it => 
-                it.name == name
-            );
+            var anime = await _context.Animes.FindAsync(id);
+            if (anime == null)
+                throw new KeyNotFoundException("Anime não encontrado");
+
+            _context.Animes.Remove(anime);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Delete(Guid id)
+        public async Task<Anime> Update(Anime entity)
         {
-            throw new NotImplementedException();
-        }
+            var anime = await _context.Animes.FindAsync(entity.id);
+            if (anime == null)
+                throw new KeyNotFoundException("Anime não encontrado");
 
-        public Task Update(Anime entity)
-        {
-            throw new NotImplementedException();
+            anime.name = entity.name;
+            anime.summary = entity.summary;
+            anime.director = entity.director;
+
+            _context.Animes.Update(anime);
+            await _context.SaveChangesAsync();
+
+            return anime;
         }
 
         private IQueryable<Anime> ApplyDirectorFilter(IQueryable<Anime> query, string director)
@@ -97,6 +104,5 @@ namespace AnimesProtech.Infrastructure.Data
 
             return query;
         }
-
     }
 }
