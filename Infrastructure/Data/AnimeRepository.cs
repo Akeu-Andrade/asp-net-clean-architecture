@@ -3,6 +3,7 @@ using AnimesProtech.Domain.Interfaces.DbContext;
 using AnimesProtech.Domain.Interfaces.Repositorys;
 using AnimesProtech.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace AnimesProtech.Infrastructure.Data
 {
@@ -22,18 +23,25 @@ namespace AnimesProtech.Infrastructure.Data
         {
             try
             {
-                entity.created_at = DateTime.UtcNow;
-                _context.Animes.Add(entity);
+                Anime anime = new Anime
+                {
+                    name = entity.name,
+                    summary = entity.summary,
+                    director = entity.director,
+                    created_at = DateTime.UtcNow
+                };
+
+                _context.Animes.Add(anime);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation($"Anime {entity.name} adicionado com sucesso");
+                _logger.LogInformation($"Anime {anime.name} adicionado com sucesso");
+
+                return anime;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Erro ao adicionar o anime {entity.name} ao banco de dados");
                 throw new InvalidOperationException("Erro inesperado ao adicionar o anime ao banco de dados");
             }
-
-            return entity;
         }
 
         public async Task<List<Anime>> GetAll(AnimeSearchCriteria criteria)
