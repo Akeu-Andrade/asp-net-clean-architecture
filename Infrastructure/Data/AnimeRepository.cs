@@ -148,7 +148,7 @@ namespace AnimesProtech.Infrastructure.Data
             }
         }
 
-        private IQueryable<Anime> ApplyDirectorFilter(IQueryable<Anime> query, string director)
+        private IQueryable<Anime> ApplyDirectorFilter(IQueryable<Anime> query, string? director)
         {
             if (!string.IsNullOrEmpty(director))
             {
@@ -158,7 +158,7 @@ namespace AnimesProtech.Infrastructure.Data
             return query;
         }
 
-        private IQueryable<Anime> ApplyNameFilter(IQueryable<Anime> query, string name)
+        private IQueryable<Anime> ApplyNameFilter(IQueryable<Anime> query, string? name)
         {
             if (!string.IsNullOrEmpty(name))
             {
@@ -168,11 +168,11 @@ namespace AnimesProtech.Infrastructure.Data
             return query;
         }
 
-        private IQueryable<Anime> ApplySummaryFilter(IQueryable<Anime> query, string summary)
+        private IQueryable<Anime> ApplySummaryFilter(IQueryable<Anime> query, string? summary)
         {
             if (!string.IsNullOrEmpty(summary))
             {
-                query = query.Where(a => a.summary.Contains(summary));
+                query = query.Where(a => a.summary!.Contains(summary));
             }
 
             return query;
