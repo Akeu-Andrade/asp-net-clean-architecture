@@ -1,13 +1,38 @@
+using AnimesProtech.Application.ConfigDoument;
+using AnimesProtech.ProjectExtensions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddConfigSwagger();
+
+string mySqlConnectionStr = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new Exception("Connection string not found");
+
+builder.Services
+    .AddApplicationServices()
+    .AddDatabase(mySqlConnectionStr)
+    .AddIdentityServices()
+    .AddLoggingServices();
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseStatusCodePages(async statusCodeContext =>
+{
+    await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
+    .ExecuteAsync(statusCodeContext.HttpContext);
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -16,29 +41,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseRouting();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.UseAuthorization();
+
+app.MapGroup("/api/v1/identity/").MapIdentityApi<IdentityUser>();
+
+app.MapControllers();
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
