@@ -21,6 +21,12 @@ namespace AnimesProtech.Application.UseCases
                 throw new ArgumentNullException(nameof(anime));
             }
 
+            var existingAnime = await _animeRepository.GetByName(anime.name);
+            if (existingAnime != null && existingAnime.id != anime.id)
+            {
+                throw new InvalidOperationException("Já existe um anime com o mesmo nome");
+            }
+
             return await _animeRepository.Update(anime);
         }
     }
