@@ -16,7 +16,9 @@ public class AnimeRepositoryTests
         var mockContext = new Mock<IAppDbContext>();
         mockContext.Setup(m => m.Animes).Returns(mockSet.Object);
 
-        var repository = new AnimeRepository(mockContext.Object);
+        var mockLogger = new Mock<ILogger<AnimeRepository>>();
+
+        var repository = new AnimeRepository(mockContext.Object, mockLogger.Object);
         var anime = GetTestAnime();
 
         // Act
