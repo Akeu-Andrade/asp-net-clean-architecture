@@ -10,70 +10,142 @@ namespace AnimesProtech.Infrastructure.Data
     {
 
         private readonly IAppDbContext _context;
+        private readonly ILogger<AnimeRepository> _logger;
 
-        public AnimeRepository(IAppDbContext context)
+        public AnimeRepository(IAppDbContext context, ILogger<AnimeRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<Anime> Add(Anime entity)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            entity.updated_at = DateTime.UtcNow;
-            _context.Animes.Add(entity);
-            await _context.SaveChangesAsync();
+            try
+            {
+                entity.created_at = DateTime.UtcNow;
+                _context.Animes.Add(entity);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation($"Anime {entity.name} adicionado com sucesso");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao adicionar o anime {entity.name} ao banco de dados");
+                throw new InvalidOperationException("Erro inesperado ao adicionar o anime ao banco de dados");
+            }
 
             return entity;
         }
 
         public async Task<List<Anime>> GetAll(AnimeSearchCriteria criteria)
         {
-            var query = _context.Animes.AsQueryable();
+            try
+            {
+                var query = _context.Animes.AsQueryable();
 
-            query = query.Where(a => a.deleted_at == null);
-            query = ApplyDirectorFilter(query, criteria.Director);
-            query = ApplyNameFilter(query, criteria.Name);
-            query = ApplySummaryFilter(query, criteria.Summary);
-            query = ApplyPagination(query, criteria.PageIndex, criteria.PageSize);
+                query = query.Where(a => a.deleted_at == null);
+                query = ApplyDirectorFilter(query, criteria.Director);
+                query = ApplyNameFilter(query, criteria.Name);
+                query = ApplySummaryFilter(query, criteria.Summary);
+                query = ApplyPagination(query, criteria.PageIndex, criteria.PageSize);
 
-            return await query.ToListAsync();
+                var animes = await query.ToListAsync();
+
+                _logger.LogInformation($"Operação de busca de animes concluída. {animes.Count} animes encontrados");
+
+                return animes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar animes");
+                throw new InvalidOperationException("Erro inesperado ao buscar animes");
+            }
         }
 
         public async Task Delete(Guid id)
         {
-            var anime = await _context.Animes.FindAsync(id);
+            try
+            {
+                var anime = await GetById(id);
 
-            if (anime == null)
-                throw new KeyNotFoundException("Anime não encontrado");
+                anime.deleted_at = DateTime.UtcNow;
 
-            anime.deleted_at = DateTime.UtcNow;
+                _context.Animes.Update(anime);
+                await _context.SaveChangesAsync();
 
-            _context.Animes.Update(anime);
-            await _context.SaveChangesAsync();
+                _logger.LogInformation($"Operação de exclusão do anime com ID {id} concluída com sucesso");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao excluir o anime com ID {id}");
+                throw new InvalidOperationException("Erro inesperado ao excluir o anime");
+            }
         }
 
         public async Task<Anime> Update(Anime entity)
         {
-            var anime = await _context.Animes.FindAsync(entity.id);
-            if (anime == null)
-                throw new KeyNotFoundException("Anime não encontrado");
+            try
+            {
+                var anime = await GetById(entity.id);
 
-            anime.name = entity.name;
-            anime.summary = entity.summary;
-            anime.director = entity.director;
-            anime.updated_at = DateTime.UtcNow;
+                if (anime.deleted_at != null)
+                    throw new InvalidOperationException("Não é possível editar um anime que foi deletado");
 
-            _context.Animes.Update(anime);
-            await _context.SaveChangesAsync();
+                anime.name = entity.name;
+                anime.summary = entity.summary;
+                anime.director = entity.director;
+                anime.updated_at = DateTime.UtcNow;
 
-            return anime;
+                _context.Animes.Update(anime);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation($"Operação de atualização do anime com ID {entity.id} concluída com sucesso");
+
+                return anime;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao atualizar o anime com ID {entity.id}");
+                throw new InvalidOperationException("Erro inesperado ao atualizar o anime");
+            }
+        }
+
+        public async Task<Anime?> GetByName(string name)
+        {
+            try
+            {
+                var anime = await _context.Animes.FirstOrDefaultAsync(a => a.name == name);
+
+                _logger.LogInformation(anime != null ? $"Anime {name} encontrado com sucesso" : $"Anime {name} não encontrado");
+
+                return anime;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao buscar o anime com nome {name}");
+                throw new InvalidOperationException("Erro inesperado ao buscar o anime pelo nome");
+            }
         }
 
         public async Task<Anime> GetById(Guid id)
         {
-            return await _context.Animes.FindAsync(id);
+            try
+            {
+                var anime = await _context.Animes.FindAsync(id);
+
+                if (anime == null)
+                {
+                    throw new KeyNotFoundException("Anime não encontrado");
+                }
+
+                _logger.LogInformation($"Anime com ID {id} encontrado com sucesso");
+
+                return anime;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao buscar o anime com ID {id}");
+                throw new InvalidOperationException("Erro inesperado ao buscar o anime pelo ID");
+            }
         }
 
         private IQueryable<Anime> ApplyDirectorFilter(IQueryable<Anime> query, string director)

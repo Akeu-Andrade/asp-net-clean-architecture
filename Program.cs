@@ -35,6 +35,11 @@ builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+});
+
 var app = builder.Build();
 
 app.UseStatusCodePages(async statusCodeContext =>
@@ -43,7 +48,6 @@ app.UseStatusCodePages(async statusCodeContext =>
     .ExecuteAsync(statusCodeContext.HttpContext);
 });
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
